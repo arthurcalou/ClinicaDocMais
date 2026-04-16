@@ -1,0 +1,172 @@
+﻿using ClinicaSoks.Models;
+using ClinicaSoks.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ClinicaSoks.Controllers
+
+{
+
+    [ApiController]
+
+    [Route("[controller]")]
+
+    public class EmergenciaController : Controller
+    {
+
+        public static List<PacienteModel> listaPaciente = new List<PacienteModel>();
+
+
+        [HttpGet("retornoCasa")]
+
+        public string casa()
+
+        {
+
+            return "casa";
+
+        }
+
+
+        [HttpGet("nomePaciente")]
+
+        public string paciente()
+
+        {
+
+            string nome = "Giovanni";
+
+            return "Paciente: " + nome;
+
+        }
+
+
+        [HttpGet("listaPacientes")]
+
+        public List<string> listaNome()
+
+        {
+
+            List<string> listaPacientes = new List<string>();
+
+            listaPacientes = ["Giovanni", "Carlos", "Pedro"];
+
+            return listaPacientes;
+
+        }
+
+
+        [HttpGet("pacientes")]
+
+        public List<PacienteModel> listarPaciente()
+
+        {
+
+            PacienteModel novoPaciente = new PacienteModel("123456789", "Giovanni", "99-99999.0000", "GiovaniProf@gmail.com", "Vermelha", new DateOnly(1999, 04, 10), "Rua alguma coisa da Silva", "Masculino");
+
+            listaPaciente.Add(novoPaciente);
+
+            novoPaciente = new PacienteModel("123456788", "Eduarda", "99-00000.9999", "dudinhadogeraypah@gmail.com", "Verde", new DateOnly(2007, 03, 15), "Rua Tal", "Feminino");
+
+            listaPaciente.Add(novoPaciente);
+
+            return listaPaciente;
+
+        }
+
+
+        [HttpGet("buscaPaciente/{id}")]
+
+        public PacienteModel? buscarPaciente(string id)
+
+        {
+
+            foreach (var paciente in listaPaciente)
+
+            {
+
+                if (paciente.cpf == id)
+
+                {
+
+                    return paciente;
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+
+        [HttpPut("editarPaciente/{id}")]
+
+        public string editarPaciente([FromBody] PacienteModel pacienteEditado, string id)
+
+        {
+
+            foreach (var paciente in listaPaciente)
+
+            {
+
+                if (paciente.cpf == id)
+
+                {
+
+                    paciente.cpf = pacienteEditado.cpf;
+
+                    paciente.nome = pacienteEditado.nome;
+
+                    paciente.telefone = pacienteEditado.telefone;
+
+                    paciente.email = pacienteEditado.email;
+
+                    paciente.prioridade = pacienteEditado.prioridade;
+
+                    paciente.dataNascimento = pacienteEditado.dataNascimento;
+
+                    paciente.endereco = pacienteEditado.endereco;
+
+                    return $"Paciente {paciente.nome}, CPF anterior: {id} editado com sucesso!";
+
+                }
+
+            }
+
+
+            return "Paciente não encontrado.";
+
+        }
+
+
+        [HttpDelete("deletarPaciente/{id}")]
+
+        public string deletarPaciente(string id)
+
+        {
+
+            foreach (var paciente in listaPaciente)
+
+            {
+
+                if (paciente.cpf == id)
+
+                {
+
+                    listaPaciente.Remove(paciente);
+
+                    return $"Paciente com CPF {id} deletado com sucesso!";
+
+                }
+
+            }
+
+            return "Paciente não encontrado.";
+
+        }
+
+    }
+
+}
